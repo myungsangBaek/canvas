@@ -25,8 +25,10 @@ class Particle {
     this.y = y;
     this.radius = radius;
     this.vy = vy;
+    this.acc = 1; // 가속도 주기 1보다 작으면 점점 0으로 수렴한다.
   }
   update() {
+    this.vy *= this.acc;
     this.y += this.vy;
   }
   draw() {
@@ -67,7 +69,7 @@ let now, delta;
 let then = Date.now();
 
 function animate() {
-  window.requestAnimationFrame(animate); //매 프레임마다 무한으로 실행되는 함수, 1초에 모니터 주사율에 따라 횟수가 찍힌다.  게임용 140Hz, 사무용 60Hz
+  window.requestAnimationFrame(animate); //매 프레임마다 무한으로 실행되는 함수, 1초에 모니터 주사율에 따라 횟수가 찍힌다.  게임용 144Hz, 사무용 60Hz
 
   now = Date.now();
   delta = now - then;
@@ -80,6 +82,7 @@ function animate() {
     particle.draw();
 
     if (particle.y - particle.radius > canvasHeight) {
+      // 원이 땅에 닿으면 재생성
       particle.y = -particle.radius;
       particle.x = randomNumBetween(0, canvasWidth);
       particle.radius = randomNumBetween(50, 100);
